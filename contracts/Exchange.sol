@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@uniswap/contracts/token/ERC20/IERC20.sol";
 
 contract Exchange {
     address public tokenAddress;
@@ -41,7 +41,7 @@ contract Exchange {
         return (inputAmount * outputReserve) / (inputReserve + inputAmount);
     }
 
-    function getTokenAmount(uint256 _ethSold) public view returns (uint256) {
+    function getUsdtAmount(uint256 _ethSold) public view returns (uint256) {
         require(_ethSold > 0, "ethSold is too small");
 
         uint256 tokenReserve = getReserve();
@@ -49,7 +49,7 @@ contract Exchange {
         return getAmount(_ethSold, address(this).balance, tokenReserve);
     }
 
-    function getEthAmount(uint256 _tokenSold) public view returns (uint256) {
+    function getWethAmount(uint256 _tokenSold) public view returns (uint256) {
         require(_tokenSold > 0, "tokenSold is too small");
 
         uint256 tokenReserve = getReserve();
@@ -57,7 +57,7 @@ contract Exchange {
         return getAmount(_tokenSold, tokenReserve, address(this).balance);
     }
 
-    function ethToTokenSwap(uint256 _minTokens) public payable {
+    function wethToUsdtSwap(uint256 _minTokens) public payable {
         uint256 tokenReserve = getReserve();
         uint256 tokensBought = getAmount(
             msg.value,
@@ -70,7 +70,7 @@ contract Exchange {
         IERC20(tokenAddress).transfer(msg.sender, tokensBought);
     }
 
-    function tokenToEthSwap(uint256 _tokensSold, uint256 _minEth) public {
+    function usdtToWethSwap(uint256 _tokensSold, uint256 _minEth) public {
         uint256 tokenReserve = getReserve();
         uint256 ethBought = getAmount(
             _tokensSold,
